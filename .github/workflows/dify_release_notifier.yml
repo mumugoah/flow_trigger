@@ -35,6 +35,6 @@ jobs:
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
         subject: New Release Detected in langgenius/dify
-        body: The repository langgenius/dify has a new release: ${{ steps.latest-release.outputs.result }}
+        body: The repository langgenius/dify has a new release
         to: gaofan@deepexi.com
         from: sunnygaofan@gmail.com
