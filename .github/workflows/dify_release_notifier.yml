@@ -3,6 +3,7 @@ name: Dify Release Notifier
 on:
   schedule:
     - cron: '0 * * * *'  # Runs at the start of every hour
+  workflow_dispatch:
 
 jobs:
   check-release:
@@ -22,7 +23,6 @@ jobs:
           return release.data.tag_name;
 
     - name: Send notification email if new release detected
-      if: steps.latest-release.outputs.result != env.LAST_RELEASE_TAG
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
