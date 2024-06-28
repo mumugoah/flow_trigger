@@ -74,7 +74,7 @@ jobs:
           <p><strong>发布时间:</strong>  ${{ steps.latest-release.outputs.published_at }}</p>
           <p><strong>更新链接:</strong> <a href="${{ steps.latest-release.outputs.html_url }}">{{ steps.latest-release.outputs.html_url }}</a></p>
           <h5>更新内容:</h5> <p>${{ steps.latest-release.outputs.content }}</p>
-        to: gaofan@deepexi.com
+        to: gaofan@deepexi.com, zhangzhenti@deepexi.com, luhuanhuan@deepexi.com
         from: ${{ secrets.EMAIL_USERNAME }}
         
     - name: Update cache with new release version
