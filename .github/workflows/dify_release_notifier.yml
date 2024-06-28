@@ -29,6 +29,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const markdown = require('markdown-it')();
+          const fs = require('fs');
           const release = await github.rest.repos.getLatestRelease({
             owner: 'langgenius',
             repo: 'dify'
