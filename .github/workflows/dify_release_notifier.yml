@@ -14,6 +14,14 @@ jobs:
   check-release:
     runs-on: ubuntu-latest
     steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm install markdown-it
+      
     - name: Check latest release from langgenius/dify
       id: latest-release
       uses: actions/github-script@v5
