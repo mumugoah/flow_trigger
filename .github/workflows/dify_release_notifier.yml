@@ -25,7 +25,13 @@ jobs:
             owner: 'langgenius',
             repo: 'dify'
           });
-          return release.data.tag_name;
+          const releaseData = {
+            tag_name: release.data.tag_name,
+            html_url: release.data.html_url,
+            body: release.data.body,
+            published_at: release.data.published_at
+          };
+          return releaseData;
 
     - name: Send notification email if new release detected
       uses: dawidd6/action-send-mail@v3
@@ -34,7 +40,13 @@ jobs:
         server_port: 465
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: New Release Detected in langgenius/dify
-        body: The repository langgenius/dify has a new release
+        subject: dify新版本发布：${{ steps.latest-release.outputs.tag_name }}
+        body: |
+          langgenius/dify 发布了新版本
+
+          **版本:** ${{ steps.latest-release.outputs.tag_name }}
+          **发布时间:** ${{ steps.latest-release.outputs.published_at }}
+          **更新内容:** ${{ steps.latest-release.outputs.body }}
+          **链接:** ${{ steps.latest-release.outputs.html_url }}
         to: gaofan@deepexi.com
         from: ${{ secrets.EMAIL_USERNAME }}
