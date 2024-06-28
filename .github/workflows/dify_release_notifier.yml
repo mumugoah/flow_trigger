@@ -13,7 +13,6 @@ on:
 jobs:
   check-release:
     runs-on: ubuntu-latest
-
     steps:
     - name: Check latest release from langgenius/dify
       id: latest-release
@@ -36,7 +35,10 @@ jobs:
           return releaseData;
 
     - name: Get result
-      run: echo "${{steps.latest-release.outputs}}"
+      with:
+        script: |
+          console.log(${{ steps.latest-release.outputs }})
+        
 
     - name: Send notification email if new release detected
       uses: dawidd6/action-send-mail@v3
