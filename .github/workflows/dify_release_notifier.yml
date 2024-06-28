@@ -25,11 +25,13 @@ jobs:
             owner: 'langgenius',
             repo: 'dify'
           });
+          const releaseDate = new Date(release.data.published_at);
+          const chinaReleaseDate = releaseDate.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
           const releaseData = {
             tag_name: release.data.tag_name,
             html_url: release.data.html_url,
             body: release.data.body,
-            published_at: release.data.published_at
+            published_at: chinaReleaseDate
           };
           return releaseData;
 
