@@ -35,11 +35,11 @@ jobs:
           return releaseData;
 
     - name: Get result
+      uses: actions/setup-python@v5
       with:
         script: |
-          console.log(${{ steps.latest-release.outputs }})
+          print(${{ steps.latest-release.outputs }})
         
-
     - name: Send notification email if new release detected
       uses: dawidd6/action-send-mail@v3
       with:
