@@ -20,15 +20,17 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const markdown = require('markdown-it')();
           const release = await github.rest.repos.getLatestRelease({
             owner: 'langgenius',
             repo: 'dify'
           });
           const releaseDate = new Date(release.data.published_at);
           const chinaReleaseDate = releaseDate.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+          const htmlBody = markdown.render(release.data.body);
           core.setOutput("tag_name", release.data.tag_name);
           core.setOutput("html_url", release.data.html_url);
-          core.setOutput("body", release.data.body);
+          core.setOutput("content", htmlBody);
           core.setOutput("published_at", chinaReleaseDate);
         
     - name: Send notification email if new release detected
@@ -40,11 +42,11 @@ jobs:
         password: ${{ secrets.EMAIL_PASSWORD }}
         subject: dify新版本发布：${{ steps.latest-release.outputs.tag_name }}
         body: |
-          langgenius/dify 发布了新版本
+          <h2>langgenius/dify 发布了新版本</h2>
 
-          **版本:** ${{ steps.latest-release.outputs.tag_name }}
-          **发布时间:** ${{ steps.latest-release.outputs.published_at }}
-          **更新内容:** ${{ steps.latest-release.outputs.body }}
-          **链接:** ${{ steps.latest-release.outputs.html_url }}
+          <p><strong> 版本:</strong> ${{ steps.latest-release.outputs.tag_name }} </p> 
+          <p><strong>发布时间:</strong>  ${{ steps.latest-release.outputs.published_at }}</p>
+          <p><strong>更新链接:</strong> <a href="${{ steps.latest-release.outputs.html_url }}">{{ steps.latest-release.outputs.html_url }}</a></p>
+          <h5>更新内容:</h5> <p>${{ steps.latest-release.outputs.content }}</p>
         to: gaofan@deepexi.com
         from: ${{ secrets.EMAIL_USERNAME }}
