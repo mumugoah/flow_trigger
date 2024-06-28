@@ -33,6 +33,15 @@ jobs:
             owner: 'langgenius',
             repo: 'dify'
           });
+          
+          const lastReleaseVersion = fs.existsSync('last_release_version.txt') ? fs.readFileSync('last_release_version.txt', 'utf8') : '';
+          if (release.data.tag_name !== lastReleaseVersion) {
+            core.setOutput('new_release', 'true');
+            fs.writeFileSync('last_release_version.txt', release.data.tag_name);
+          } else {
+            core.setOutput('new_release', 'false');
+          }
+
           const releaseDate = new Date(release.data.published_at);
           const chinaReleaseDate = releaseDate.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
           const htmlBody = markdown.render(release.data.body);
@@ -42,6 +51,7 @@ jobs:
           core.setOutput("published_at", chinaReleaseDate);
         
     - name: Send notification email if new release detected
+      if: steps.latest-release.outputs.new_release == 'true'
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
@@ -56,5 +66,12 @@ jobs:
           <p><strong>发布时间:</strong>  ${{ steps.latest-release.outputs.published_at }}</p>
           <p><strong>更新链接:</strong> <a href="${{ steps.latest-release.outputs.html_url }}">{{ steps.latest-release.outputs.html_url }}</a></p>
           <h5>更新内容:</h5> <p>${{ steps.latest-release.outputs.content }}</p>
-        to: gaofan@deepexi.com, zhangzhenti@deepexi.com, luhuanhuan@deepexi.com
+        to: gaofan@deepexi.com
         from: ${{ secrets.EMAIL_USERNAME }}
+        
+    - name: Update cache with new release version
+      if: steps.latest-release.outputs.new_release == 'true'
+      uses: actions/cache@v3
+      with:
+        path: last_release_version.txt
+        key: last-release-version
