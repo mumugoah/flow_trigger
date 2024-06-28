@@ -21,6 +21,13 @@ jobs:
         
     - name: Install dependencies
       run: npm install markdown-it
+
+    - name: Get last release version from cache
+      id: get-cache
+      uses: actions/cache@v3
+      with:
+        path: last_release_version.txt
+        key: last-release-version
       
     - name: Check latest release from langgenius/dify
       id: latest-release
