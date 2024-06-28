@@ -32,6 +32,7 @@ jobs:
             body: release.data.body,
             published_at: chinaReleaseDate
           };
+          core.setOutput("tag_name", release.data.tag_name);
           return releaseData;
 
     - name: Get result
@@ -39,7 +40,7 @@ jobs:
       with:
         python-version: 3.11
         script: |
-          print(${{ steps.latest-release.outputs }})
+          print(${{ steps.latest-release.outputs.tag_name }})
         
     - name: Send notification email if new release detected
       uses: dawidd6/action-send-mail@v3
