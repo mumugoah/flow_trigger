@@ -49,6 +49,7 @@ jobs:
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
         subject: dify新版本发布：${{ steps.latest-release.outputs.tag_name }}
+        content_type: text/html
         body: |
           <h2>langgenius/dify 发布了新版本</h2>
 
