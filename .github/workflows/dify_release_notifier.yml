@@ -24,7 +24,7 @@ jobs:
 
     - name: Get last release version from cache
       id: get-cache
-      uses: actions/cache@v3
+      uses: actions/cache/restore@v4
       with:
         path: last_release_version.txt
         key: last-release-version
@@ -79,7 +79,7 @@ jobs:
         
     - name: Update cache with new release version
       if: steps.latest-release.outputs.new_release == 'true'
-      uses: actions/cache@v3
+      uses: actions/cache/save@v4
       with:
         path: last_release_version.txt
         key: last-release-version
