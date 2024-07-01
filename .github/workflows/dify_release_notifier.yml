@@ -10,6 +10,10 @@ on:
         type: boolean
         required: false
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   check-release:
     runs-on: ubuntu-latest
@@ -76,6 +80,15 @@ jobs:
           <h5>更新内容:</h5> <p>${{ steps.latest-release.outputs.content }}</p>
         to: gaofan@deepexi.com
         from: ${{ secrets.EMAIL_USERNAME }}
+
+    - name: Delete Previous Cache
+      if: steps.latest-release.outputs.new_release == 'true'
+      continue-on-error: true
+      run: |
+        gh extension install actions/gh-actions-cache
+        gh actions-cache delete last_release_version --confirm
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Update cache with new release version
       if: steps.latest-release.outputs.new_release == 'true'
