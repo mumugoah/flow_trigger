@@ -83,7 +83,7 @@ jobs:
 
     - name: Delete Previous Cache
       if: steps.latest-release.outputs.new_release == 'true'
-      run: gh cache delete --all --repo me/my-project  # TODO: Use your project.
+      run: gh cache delete --all --repo mumugoah/flow_trigger
       env:
         GITHUB_TOKEN: ${{ secrets.ACTION_CLEAR_CACHES_TOKEN }}
         
