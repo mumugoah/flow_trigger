@@ -85,8 +85,7 @@ jobs:
       if: steps.latest-release.outputs.new_release == 'true'
       continue-on-error: true
       run: |
-        gh extension install actions/gh-actions-cache
-        gh actions-cache delete last_release_version --confirm
+        gh cache delete last-release-version
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
