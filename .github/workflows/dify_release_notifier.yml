@@ -17,28 +17,21 @@ permissions:
 jobs:
   check-release:
     runs-on: ubuntu-latest
-    
     steps:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
-
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Get last release version
-      shell: bash
-      id: get-last-version
-      run: |
-        if [ -f last_release_version.txt ]; then
-          cat last_release_version.txt
-        else
-          echo "none"
-        fi
         
     - name: Install dependencies
       run: npm install markdown-it
+
+    - name: Get last release version from cache
+      id: get-cache
+      uses: actions/cache/restore@v4
+      with:
+        path: last_release_version.txt
+        key: last-release-version
       
     - name: Check latest release from langgenius/dify
       id: latest-release
@@ -53,7 +46,7 @@ jobs:
             repo: 'dify'
           });
           
-          const lastReleaseVersion = process.env.LAST_RELEASE_VERSION;
+          const lastReleaseVersion = fs.existsSync('last_release_version.txt') ? fs.readFileSync('last_release_version.txt', 'utf8') : '';
           if (release.data.tag_name !== lastReleaseVersion + 1) {
             core.setOutput('new_release', 'true');
             fs.writeFileSync('last_release_version.txt', release.data.tag_name);
@@ -96,13 +89,9 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: Update last release version
+    - name: Update cache with new release version
       if: steps.latest-release.outputs.new_release == 'true'
-      shell: bash
-      run: |
-        echo "${{ steps.latest-release.outputs.tag_name }}" > last_release_version.txt
-        git config --global user.name 'mumugoah'
-        git config --global user.email 'sunnygaofan@gmail.com'
-        git add last_release_version.txt
-        git commit -m "Update last release version to ${{ steps.latest-release.outputs.tag_name }}"
-        git push
+      uses: actions/cache/save@v4
+      with:
+        path: last_release_version.txt
+        key: last-release-version
