@@ -101,8 +101,8 @@ jobs:
       shell: bash
       run: |
         echo "${{ steps.latest-release.outputs.tag_name }}" > last_release_version.txt
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git config --global user.name 'mumugoah'
+        git config --global user.email 'sunnygaofan@gmail.com'
         git add last_release_version.txt
         git commit -m "Update last release version to ${{ steps.latest-release.outputs.tag_name }}"
         git push
