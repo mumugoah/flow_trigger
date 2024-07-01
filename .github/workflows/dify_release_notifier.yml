@@ -83,11 +83,9 @@ jobs:
 
     - name: Delete Previous Cache
       if: steps.latest-release.outputs.new_release == 'true'
-      continue-on-error: true
-      run: |
-        gh cache delete last-release-version
+      run: gh cache delete --all --repo me/my-project  # TODO: Use your project.
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACTION_CLEAR_CACHES_TOKEN }}
         
     - name: Update cache with new release version
       if: steps.latest-release.outputs.new_release == 'true'
