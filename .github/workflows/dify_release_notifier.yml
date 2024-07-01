@@ -47,7 +47,7 @@ jobs:
           });
           
           const lastReleaseVersion = fs.existsSync('last_release_version.txt') ? fs.readFileSync('last_release_version.txt', 'utf8') : '';
-          if (release.data.tag_name !== lastReleaseVersion + 1) {
+          if (release.data.tag_name !== lastReleaseVersion) {
             core.setOutput('new_release', 'true');
             fs.writeFileSync('last_release_version.txt', release.data.tag_name);
           } else {
